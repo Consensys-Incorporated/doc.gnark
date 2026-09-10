@@ -19,7 +19,7 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "ConsenSys", // Usually your GitHub org/user name.
+  organizationName: "Consensys-Incorporated", // Usually your GitHub org/user name.
   projectName: "doc.gnark", // Usually your repo name.
   deploymentBranch: "gh-pages", // Github Pages deploying branch
 
@@ -39,7 +39,7 @@ const config = {
           breadcrumbs: true,
           sidebarPath: require.resolve("./sidebars.js"),
           // Set a base path separate from default /docs
-          editUrl: "https://github.com/ConsenSys/doc.gnark/tree/main/",
+          editUrl: "https://github.com/Consensys-Incorporated/doc.gnark/tree/main/",
           routeBasePath: "/",
           path: "docs",
           include: ["**/*.md", "**/*.mdx"],
@@ -140,7 +140,7 @@ const config = {
             position: "left",
           },
           {
-            href: "https://github.com/ConsenSys/gnark",
+            href: "https://github.com/Consensys-Incorporated/gnark",
             className: "header-github-link",
             position: "right",
             "aria-label": "gnark on GitHub",
@@ -179,7 +179,7 @@ const config = {
               },
               {
                 label: "Go package",
-                href: "https://pkg.go.dev/github.com/consensys/gnark",
+                href: "https://pkg.go.dev/github.com/Consensys-Incorporated/gnark",
               },
             ],
           },
@@ -188,11 +188,11 @@ const config = {
             items: [
               {
                 label: "gnark on GitHub",
-                href: "https://github.com/ConsenSys/gnark",
+                href: "https://github.com/Consensys-Incorporated/gnark",
               },
               {
                 label: "Improve these docs",
-                href: "https://github.com/ConsenSys/doc.gnark",
+                href: "https://github.com/Consensys-Incorporated/doc.gnark",
               },
             ],
           },

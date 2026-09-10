@@ -89,7 +89,7 @@ If witness is not built within the same process, or in another programming langu
 
 On `ecc.BN254` + `Groth16`, `gnark` can export the `groth16.VerifyingKey` as a solidity smart contract.
 
-Refer to [the code example](https://github.com/ConsenSys/gnark-tests/blob/main/solidity/contract/main.go) and [end-to-end integration test](https://github.com/ConsenSys/gnark-tests/blob/47873ce8e146c1f74477a15972ec63cbfd73c888/solidity/solidity_test.go#L81) using a `geth` simulated blockchain.
+Refer to [the code example](https://github.com/Consensys-Incorporated/gnark-tests/blob/main/solidity/contract/main.go) and [end-to-end integration test](https://github.com/Consensys-Incorporated/gnark-tests/blob/47873ce8e146c1f74477a15972ec63cbfd73c888/solidity/solidity_test.go#L81) using a `geth` simulated blockchain.
 
 ```go
 // 1. Compile (Groth16 + BN254)

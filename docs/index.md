@@ -26,7 +26,7 @@ In a typical workflow:
 
 :::warning
 
-`gnark` has been [audited](https://github.com/Consensys/gnark/blob/master/audits/2022-10%20-%20Kudelski%20-%20gnark-crypto.pdf) and is provided as-is, use at your own risk.
+`gnark` has been [audited](https://github.com/Consensys-Incorporated/gnark/blob/master/audits/2022-10%20-%20Kudelski%20-%20gnark-crypto.pdf) and is provided as-is, use at your own risk.
 
 In particular, `gnark` makes no security guarantees such as constant time implementation or side-channel attack resistance.
 
@@ -137,7 +137,7 @@ It is difficult to fairly and accurately compare benchmarks among libraries. Som
 
 :::
 
-On low-level primitives like the pairing or the field multiplication, [gnark-crypto](https://github.com/ConsenSys/gnark-crypto) outperforms most libraries out there. It translates well up-the-stack - `gnark` compiles gigantic circuits in seconds, and its solver (aka witness generation) and provers perform very well on most architectures.
+On low-level primitives like the pairing or the field multiplication, [gnark-crypto](https://github.com/Consensys-Incorporated/gnark-crypto) outperforms most libraries out there. It translates well up-the-stack - `gnark` compiles gigantic circuits in seconds, and its solver (aka witness generation) and provers perform very well on most architectures.
 
 Here we benchmark two circuits (65k and 8M constraints) using `gnark`, `arkworks` and `rapidsnark` on the BN254 curve.
 
