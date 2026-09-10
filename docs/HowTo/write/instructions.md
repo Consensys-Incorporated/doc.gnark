@@ -39,6 +39,6 @@ func (cs *ConstraintSystem) Select(b Variable, i1, i2 interface{}) Variable {
 
 :::note
 
-Work is ongoing to provide a `if` like statement. [Github issue](https://github.com/ConsenSys/gnark/issues/81).
+Work is ongoing to provide a `if` like statement. [Github issue](https://github.com/Consensys-Incorporated/gnark/issues/81).
 
 :::

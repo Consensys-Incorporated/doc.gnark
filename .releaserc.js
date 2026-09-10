@@ -26,7 +26,7 @@ const mainConfig = {
       },
     ],
   ],
-  repositoryUrl: "https://github.com/ConsenSys/doc.gnark",
+  repositoryUrl: "https://github.com/Consensys-Incorporated/doc.gnark",
 };
 
 module.exports = mainConfig;
