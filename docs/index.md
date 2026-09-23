@@ -26,7 +26,7 @@ In a typical workflow:
 
 :::warning
 
-`gnark` and `gnark-crypto` have been independently audited. Reports are available in the [`gnark` audits directory](https://github.com/Consensys-Incorporated/gnark/tree/master/audits) and the [`gnark-crypto` audits directory](https://github.com/Consensys-Incorporated/gnark-crypto/tree/master/audits). The library is provided as-is; use it at your own risk.
+`gnark` and `gnark-crypto` have been independently audited. Reports are available in the [`gnark` audits directory](https://github.com/Consensys-Incorporated/gnark/tree/master/audits). The library is provided as-is; use it at your own risk.
 
 In particular, `gnark` makes no security guarantees such as constant time implementation or side-channel attack resistance.
 
