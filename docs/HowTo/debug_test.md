@@ -76,7 +76,6 @@ assert.CheckCircuit(&cubicCircuit,
 	}),
 	test.WithCurves(ecc.BN254),
 )
-
 ```
 
 The older `assert.ProverSucceeded` and `assert.ProverFailed` helpers remain useful for simple cases:
