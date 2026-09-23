@@ -17,14 +17,8 @@ sidebar_position: 1
 go get github.com/consensys/gnark@latest
 ```
 
-:::note
-
-If you use Go modules, in `go.mod` the module path is case sensitive (use `consensys` and not `ConsenSys`).
-
-:::
-
 :::info
 
-`gnark` is optimized for `amd64` targets (`x86 64bits`) and tested on Unix (Linux / macOS).
+`gnark` targets Go 1.25 or newer. It is optimized for `amd64` and also supports experimental GPU acceleration for Groth16 through the ICICLE backend.
 
 :::

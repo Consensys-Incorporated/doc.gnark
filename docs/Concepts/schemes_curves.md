@@ -4,9 +4,9 @@ description: Proving schemes and curves
 sidebar_position: 3
 ---
 
-# Prove schemes and curves
+# Proving schemes and curves
 
-`gnark` supports two proving schemes [Groth16](https://eprint.iacr.org/2016/260.pdf) and [PlonK](https://eprint.iacr.org/2019/953.pdf). These schemes can be instantiated with any of the following elliptic curves: _BN254_, _BLS12-381_, _BLS12-377_, _BLS24-315_, _BW6-633_ or _BW6-761_.
+`gnark` supports two proving schemes: [Groth16](https://eprint.iacr.org/2016/260.pdf) and [PlonK](https://eprint.iacr.org/2019/953.pdf) with KZG commitments. These schemes can be instantiated with any of the following elliptic curves: _BN254_, _BLS12-381_, _BLS12-377_, or _BW6-761_.
 
 An ID is supplied to `gnark` to choose the proving scheme and the instantiating curve.
 
@@ -73,7 +73,7 @@ Currently, `gnark` supports PlonK with KZG polynomial commitment.
 
 ## Choosing an elliptic curve
 
-Both Groth16 and PlonK (with KZG scheme) need to be instantiated with an elliptic curve. `gnark` supports six elliptic curves: BN254, BLS12-381, BLS12-377, BW6-761, BLS24-315, and BW6-633. All these curves are defined over a finite field $\mathbb{F}_p$ and have an equation of the form $y^2=x^3+b$ ($b\in \mathbb{F}_p$).
+Both Groth16 and PlonK (with KZG) need to be instantiated with an elliptic curve. `gnark` supports BN254, BLS12-381, BLS12-377, and BW6-761 for these proving backends. All these curves are defined over a finite field $\mathbb{F}_p$ and have an equation of the form $y^2=x^3+b$ ($b\in \mathbb{F}_p$).
 
 To work with Groth16 and PlonK, the curves must:
 
@@ -126,14 +126,8 @@ Some applications that use one-layer proof composition include ZEXE, Celo, Aleo,
 
 :::
 
-### BLS24-315 and BW6-633 curves
+## Small and emulated fields
 
-In Groth16, elliptic curve operations take place in three different groups: $G_1$, $G_2$ and $G_T$, whereas in PlonK (with KZG) operations take place only in $G_1$ and $G_T$. While BN254, BLS12-381 and BLS12-377 are optimized for all the three groups, BLS24-315 is better optimized for $G_1$ only while still competitively optimized for $G_T$. Moreover, it comes in a 2-chain setting with BW6-633 to enable PlonK one-layer proof composition efficiently.
+`gnark` also has constraint-system implementations for several small fields, including Babybear, Koalabear, Grumpkin, and Tinyfield. These are useful for specialized systems and some recursion workloads, but they are not the pairing-friendly Groth16/PlonK proving curves above.
 
-In summary, (BLS24-315, BW6-633) is a pair of elliptic curves that:
-
-- Are secure, for proof soundness.
-- Are pairing-friendly, for proof verification.
-- Are optimized for KZG-based SNARKs (for example, PlonK).
-- Have a highly 2-adic subgroup order, for efficient proof generation.
-- For efficient proof composition, BW6-633 has a subgroup order equal to BLS24-315's field characteristic.
+For arithmetic over a field different from the circuit's native field, use [`std/math/emulated`](https://pkg.go.dev/github.com/consensys/gnark/std/math/emulated). Emulated arithmetic is the foundation for gadgets such as ECDSA, pairing checks, and EVM precompiles.

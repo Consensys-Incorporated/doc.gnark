@@ -56,7 +56,7 @@ With solving errors and `api.Println`, `gnark` outputs a stack trace which conta
 
 ## Test
 
-You can implement tests as Go unit tests, in a `_test.go` file. For example:
+You can implement tests as Go unit tests in a `_test.go` file. The preferred pattern is `assert.CheckCircuit`, which can exercise both valid and invalid assignments and limit the test matrix to the curves and backends you care about:
 
 ```go
 // assert object wrapping testing.T
@@ -65,18 +65,31 @@ assert := test.NewAssert(t)
 // declare the circuit
 var cubicCircuit Circuit
 
-assert.ProverFailed(&cubicCircuit, &Circuit{
-    PreImage:   42,
-    Hash:       42,
-})
-
-assert.ProverSucceeded(&cubicCircuit, &Circuit{
-    PreImage:   35,
-    Hash:       "16130099170765464552823636852555369511329944820189892919423002775646948828469",
-}, test.WithCurves(ecc.BN254))
+assert.CheckCircuit(&cubicCircuit,
+	test.WithValidAssignment(&Circuit{
+		PreImage: "16130099170765464552823636852555369511329944820189892919423002775646948828469",
+		Hash:     "12886436712380113721405259596386800092738845035233065858332878701083870690753",
+	}),
+	test.WithInvalidAssignment(&Circuit{
+		PreImage: 42,
+		Hash:     42,
+	}),
+	test.WithCurves(ecc.BN254),
+)
 
 ```
 
-See the [test package documentation](https://pkg.go.dev/github.com/consensys/gnark/test@v0.7.0) for more details.
+The older `assert.ProverSucceeded` and `assert.ProverFailed` helpers remain useful for simple cases:
+
+```go
+assert.ProverSucceeded(&cubicCircuit, &Circuit{
+	PreImage: "16130099170765464552823636852555369511329944820189892919423002775646948828469",
+	Hash:     "12886436712380113721405259596386800092738845035233065858332878701083870690753",
+}, test.WithCurves(ecc.BN254))
+```
+
+Use `test.WithBackends(backend.GROTH16, backend.PLONK)` to restrict the backends under test. The `debug` build tag is still available for more verbose circuit diagnostics. There are also `prover_checks` and `release_checks` build tags that enable additional prover-side checks while debugging.
+
+See the [test package documentation](https://pkg.go.dev/github.com/consensys/gnark/test) for more details.
 
 In particular, the default behavior of the assert helper is to test the circuit across all supported curves and backends, ensure correct serialization, and cross-test the constraint system solver against a `big.Int` test execution engine.

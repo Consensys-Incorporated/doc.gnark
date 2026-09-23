@@ -18,7 +18,7 @@ Once the [circuit](write/circuit_structure.md) is [compiled](compile.md), you ca
 
 :::note
 
-Supported zk-SNARK backends are under `gnark/backend`. `gnark` currently implements `Groth16` and an experimental version of `PlonK`.
+Supported zk-SNARK backends are under `gnark/backend`. `gnark` currently implements `Groth16` and `PlonK` with KZG commitments.
 
 :::
 
@@ -36,21 +36,38 @@ proof, err := groth16.Prove(cs, pk, witness)
 
 // 3. Proof verification
 err := groth16.Verify(proof, vk, publicWitness)
-
 ```
 
   </TabItem>
   <TabItem value="PlonK" label="PlonK" >
 
 ```go
+// Compile a circuit with the PlonK arithmetization.
+ccs, err := frontend.Compile(ecc.BN254.ScalarField(), scs.NewBuilder, &circuit)
+if err != nil {
+	return err
+}
+
+// For development and tests only. In production, load a securely generated SRS.
+srs, srsLagrange, err := unsafekzg.NewSRS(ccs.(*cs.SparseR1CS))
+if err != nil {
+	return err
+}
+
 // 1. One time setup
-publicData, _ := plonk.Setup(cs, ...) // WIP
+pk, vk, err := plonk.Setup(ccs, srs, srsLagrange)
+if err != nil {
+	return err
+}
 
 // 2. Proof creation
-proof, err := plonk.Prove(r1cs, publicData, witness)
+proof, err := plonk.Prove(ccs, pk, witness)
+if err != nil {
+	return err
+}
 
 // 3. Proof verification
-err := plonk.Verify(proof, publicData, publicWitness)
+return plonk.Verify(proof, vk, publicWitness)
 
 ```
 
@@ -73,10 +90,21 @@ assignment := &Circuit {
     X: 3,
     Y: 35,
 }
-witness, _ := frontend.NewWitness(assignment, ecc.BN254)
+witness, err := frontend.NewWitness(assignment, ecc.BN254.ScalarField())
+if err != nil {
+	return err
+}
+publicWitness, err := frontend.NewWitness(assignment, ecc.BN254.ScalarField(), frontend.PublicOnly())
+if err != nil {
+	return err
+}
+
 // use the witness directly in zk-SNARK backend APIs
-groth16.Prove(cs, pk, witness)
-// test file --> assert.ProverSucceeded(cs, &witness)
+proof, err := groth16.Prove(cs, pk, witness)
+if err != nil {
+	return err
+}
+return groth16.Verify(proof, vk, publicWitness)
 ```
 
 :::tip
@@ -87,17 +115,30 @@ If witness is not built within the same process, or in another programming langu
 
 ## Verify a `Proof` on Ethereum
 
-On `ecc.BN254` + `Groth16`, `gnark` can export the `groth16.VerifyingKey` as a solidity smart contract.
+On `ecc.BN254` + `Groth16`, `gnark` can export the `groth16.VerifyingKey` as a Solidity smart contract. Solidity export is also available for `PlonK` on BN254.
 
 Refer to [the code example](https://github.com/Consensys-Incorporated/gnark-tests/blob/main/solidity/contract/main.go) and [end-to-end integration test](https://github.com/Consensys-Incorporated/gnark-tests/blob/47873ce8e146c1f74477a15972ec63cbfd73c888/solidity/solidity_test.go#L81) using a `geth` simulated blockchain.
 
 ```go
 // 1. Compile (Groth16 + BN254)
-cs, err := frontend.Compile(ecc.BN254, r1cs.NewBuilder, &myCircuit)
+cs, err := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &myCircuit)
+if err != nil {
+	return err
+}
 
 // 2. Setup
 pk, vk, err := groth16.Setup(cs)
+if err != nil {
+	return err
+}
 
-// 3. Write solidity smart contract into a file
-err = vk.ExportSolidity(f)
+// 3. Write a Solidity smart contract into a file.
+//
+// In production, create proofs and verify native proofs with the Solidity-compatible
+// options:
+//   proof, err := groth16.Prove(cs, pk, witness,
+//       solidity.WithProverTargetSolidityVerifier(backend.GROTH16))
+//   err := groth16.Verify(proof, vk, publicWitness,
+//       solidity.WithVerifierTargetSolidityVerifier(backend.GROTH16))
+return vk.ExportSolidity(f, solidity.WithPragmaVersion("^0.8.0"))
 ```

@@ -26,7 +26,7 @@ In a typical workflow:
 
 :::warning
 
-`gnark` has been [audited](https://github.com/Consensys-Incorporated/gnark/blob/master/audits/2022-10%20-%20Kudelski%20-%20gnark-crypto.pdf) and is provided as-is, use at your own risk.
+`gnark` and `gnark-crypto` have been independently audited. Reports are available in the [`gnark` audits directory](https://github.com/Consensys-Incorporated/gnark/tree/master/audits) and the [`gnark-crypto` audits directory](https://github.com/Consensys-Incorporated/gnark-crypto/tree/master/audits). The library is provided as-is; use it at your own risk.
 
 In particular, `gnark` makes no security guarantees such as constant time implementation or side-channel attack resistance.
 
@@ -52,20 +52,23 @@ Users write their zk-SNARK circuits in plain Go. `gnark` uses Go because:
 // Circuit defines a pre-image knowledge proof
 // mimc(secret preImage) = public hash
 type Circuit struct {
-    PreImage frontend.Variable
-    Hash     frontend.Variable `gnark:",public"`
+	PreImage frontend.Variable
+	Hash     frontend.Variable `gnark:",public"`
 }
 
 // Define declares the circuit's constraints
 func (circuit *Circuit) Define(api frontend.API) error {
-    // hash function
-    mimc, err := mimc.NewMiMC(api.Curve())
+	// specify constraints
+	mimc, err := mimc.NewMiMC(api)
+	if err != nil {
+		return err
+	}
 
-    // specify constraints
-    // mimc(preImage) == hash
-    api.AssertIsEqual(circuit.Hash, mimc.Hash(cs, circuit.PreImage))
+	// mimc(preImage) == hash
+	mimc.Write(circuit.PreImage)
+	api.AssertIsEqual(circuit.Hash, mimc.Sum())
 
-    return nil
+	return nil
 }
 ```
 
@@ -74,7 +77,10 @@ func (circuit *Circuit) Define(api frontend.API) error {
 
 ```go
 var mimcCircuit Circuit
-r1cs, err := frontend.Compile(ecc.BN254, r1cs.NewBuilder, &mimcCircuit)
+ccs, err := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &mimcCircuit)
+if err != nil {
+	return err
+}
 ```
 
   </TabItem>
@@ -83,38 +89,50 @@ r1cs, err := frontend.Compile(ecc.BN254, r1cs.NewBuilder, &mimcCircuit)
 ```go
 // witness
 assignment := &Circuit{
-    Hash: "16130099170765464552823636852555369511329944820189892919423002775646948828469",
-    PreImage: 35,
+	Hash: "12886436712380113721405259596386800092738845035233065858332878701083870690753",
+	PreImage: "16130099170765464552823636852555369511329944820189892919423002775646948828469",
 }
-witness, _ := frontend.NewWitness(assignment, ecc.BN254.ScalarField())
-publicWitness, _ := witness.Public()
-pk, vk, err := groth16.Setup(r1cs)
-proof, err := groth16.Prove(r1cs, pk, witness)
-err := groth16.Verify(proof, vk, publicWitness)
+witness, err := frontend.NewWitness(assignment, ecc.BN254.ScalarField())
+if err != nil {
+	return err
+}
+publicWitness, err := witness.Public()
+if err != nil {
+	return err
+}
+
+pk, vk, err := groth16.Setup(ccs)
+if err != nil {
+	return err
+}
+proof, err := groth16.Prove(ccs, pk, witness)
+if err != nil {
+	return err
+}
+return groth16.Verify(proof, vk, publicWitness)
 ```
 
   </TabItem>
   <TabItem value="unit test" label="unit test" >
 
 ```go
-assert := groth16.NewAssert(t)
+assert := test.NewAssert(t)
 
 var mimcCircuit Circuit
 
 {
-    assert.ProverFailed(&mimcCircuit, &Circuit{
-        Hash: 42,
-        PreImage: 42,
-    })
+	assert.ProverFailed(&mimcCircuit, &Circuit{
+		Hash:     42,
+		PreImage: 42,
+	})
 }
 
 {
-      assert.ProverSucceeded(&mimcCircuit, &Circuit{
-        Hash: "16130099170765464552823636852555369511329944820189892919423002775646948828469",
-        PreImage: 35,
-    })
+	assert.ProverSucceeded(&mimcCircuit, &Circuit{
+		PreImage: "16130099170765464552823636852555369511329944820189892919423002775646948828469",
+		Hash:     "12886436712380113721405259596386800092738845035233065858332878701083870690753",
+	}, test.WithCurves(ecc.BN254))
 }
-
 ```
 
   </TabItem>
