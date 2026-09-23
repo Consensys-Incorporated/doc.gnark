@@ -16,4 +16,4 @@ An important point is that every component of a constraint (variables, inputs an
 
 On the other hand, a circuit reasoning on variables which live in $\mathbb{F}_r$ where $r\neq p$, has a high number of constraints because of the algebraic constraints needed to emulate the arithmetic modulo $r$ on a field of characteristic $p$.
 
-Finally, the number of constraints in a circuit is limited; you cannot write arbitrarily large circuits. For example, using Groth16 on BN254, you cannot exceed ~$250M$ constraints.
+Finally, the number of constraints in a circuit is limited by proving time, memory, and the parameters of the proving system. Measure and profile a representative circuit before assuming it fits your deployment budget.

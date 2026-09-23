@@ -6,29 +6,64 @@ sidebar_position: 6
 
 # Compiler hints
 
-Instead of computing some value within a circuit, it's sometimes more optimal to compute the value off-circuit and only verify the correctness of the computation in a circuit. `gnark` allows you to do this through _hints_. From the prover's point of view, hints are essentially input variables provided by a hint function instead of the user.
+Instead of computing every value inside a circuit, it is sometimes more efficient to compute a value outside the circuit and verify only the properties required for soundness. `gnark` calls these off-circuit computations _hints_. During solving, the prover obtains hint outputs from a hint function and then uses those outputs in constraints.
 
-For example, consider a decomposition of an integer `a` into bits. A naive way to decompose it is to look at the binary representation of the integer and extract bits from this representation, but `gnark` doesn't currently provide native bit operations. Instead, the hint function `hint.IthBit` can provide the bits as variables and the user must constrain these variables as a weighted sum which equals to `a`. In a circuit it would look like:
+For example, the circuit API can decompose an integer into bits directly:
 
 ```go
-  var b []frontend.Variable
-  var Σbi frontend.Variable
-  base := 1
-  for i := 0; i < nBits; i++ {
-    b[i] = cs.NewHint(hint.IthBit, a, i)
-    cs.AssertIsBoolean(b[i])
-    Σbi = api.Add(Σbi, api.Mul(b[i], base))
-    base = base << 1
-  }
-  cs.AssertIsEqual(Σbi, a)
+bits := api.ToBinary(circuit.Value, nBits)
 ```
 
-This method is also implemented in the front end as `ToBinary(...)` interface method.
+This is preferable to hand-rolling a decomposition with a hint.
 
-`gnark` provides a [list of built-in hint functions](https://pkg.go.dev/github.com/consensys/gnark/backend/hint#Function).
+## Implement a hint
 
-## Implement hint functions
+A hint is a Go function of type `solver.Hint`:
 
-You can define your own hint functions in addition to built-in hint functions. You can provide any instance satisfying the [`hint.Function`](https://pkg.go.dev/github.com/consensys/gnark/backend/hint#Function) to `api.NewHint(...)` method to compute the hint value. Additionally, you must provide the hint function as a [`backend.WithHints`](https://pkg.go.dev/github.com/consensys/gnark/backend#WithHints) option to the back end, so the back end can access the hint function.
+```go
+func bitsHint(field *big.Int, inputs []*big.Int, outputs []*big.Int) error {
+	if len(inputs) != 1 {
+		return fmt.Errorf("unexpected hint arity")
+	}
 
-`gnark` also provides a constructor [`hint.NewStaticHint`](https://pkg.go.dev/github.com/consensys/gnark/backend/hint#NewStaticHint) for constructing simple hint functions, which takes a constant number of inputs and returns a constant number of outputs.
+	a := inputs[0]
+	for i := range outputs {
+		outputs[i].SetUint64(uint64(a.Bit(i)))
+	}
+	return nil
+}
+```
+
+Use `api.Compiler().NewHint` in the circuit to request outputs, then constrain them:
+
+```go
+b, err := api.Compiler().NewHint(bitsHint, nBits, circuit.Value)
+if err != nil {
+	return err
+}
+
+var weightedSum frontend.Variable
+
+for i, bit := range b {
+	api.AssertIsBoolean(bit)
+	weightedSum = api.Add(weightedSum, api.Mul(bit, 1<<i))
+}
+
+api.AssertIsEqual(weightedSum, circuit.Value)
+```
+
+## Register hints
+
+The backend solver can execute a hint only if the function is available to it. Pass it explicitly when proving:
+
+```go
+proof, err := groth16.Prove(ccs, pk, witness,
+	backend.WithSolverOptions(solver.WithHints(bitsHint)),
+)
+```
+
+The corresponding verifier option is `backend.WithSolverOptions(solver.WithHints(bitsHint))`. To replace an already registered hint, use `solver.OverrideHint`.
+
+Gadgets in `gnark/std` register their required hints automatically when the package is imported. If a serialized constraint system is loaded by a process that does not import the gadget package, call the gadget's registration function (for example, `std.RegisterHints()`) during initialization.
+
+For the built-in hint registry, see the [`constraint/solver` package documentation](https://pkg.go.dev/github.com/consensys/gnark/constraint/solver).

@@ -14,11 +14,19 @@ We provide the following functions in `gnark/std`:
   <TabItem value="MiMC hash" label="MiMC hash" >
 
 ```go
+type mimcCircuit struct {
+	Data frontend.Variable
+	Hash frontend.Variable `gnark:",public"`
+}
+
 func (circuit *mimcCircuit) Define(api frontend.API) error {
-    // ...
-    hFunc, _ := mimc.NewMiMC(api.Curve())
-    computedHash := hFunc.Hash(cs, circuit.Data)
-    // ...
+	hFunc, err := mimc.NewMiMC(api)
+	if err != nil {
+		return err
+	}
+	hFunc.Write(circuit.Data)
+	api.AssertIsEqual(circuit.Hash, hFunc.Sum())
+	return nil
 }
 ```
 
@@ -27,17 +35,24 @@ func (circuit *mimcCircuit) Define(api frontend.API) error {
 
 ```go
 type eddsaCircuit struct {
-    PublicKey eddsa.PublicKey           `gnark:",public"`
-    Signature eddsa.Signature           `gnark:",public"`
-    Message   frontend.Variable         `gnark:",public"`
+	curveID   tedwards.ID
+	PublicKey eddsa.PublicKey   `gnark:",public"`
+	Signature eddsa.Signature   `gnark:",public"`
+	Message   frontend.Variable `gnark:",public"`
 }
 
 func (circuit *eddsaCircuit) Define(api frontend.API) error {
-    edCurve, _ := twistededwards.NewEdCurve(api.Curve())
-    circuit.PublicKey.Curve = edCurve
+	curve, err := twistededwards.NewEdCurve(api, circuit.curveID)
+	if err != nil {
+		return err
+	}
 
-    eddsa.Verify(cs, circuit.Signature, circuit.Message, circuit.PublicKey)
-    return nil
+	hFunc, err := mimc.NewMiMC(api)
+	if err != nil {
+		return err
+	}
+
+	return eddsa.Verify(curve, circuit.Signature, circuit.Message, circuit.PublicKey, &hFunc)
 }
 ```
 
@@ -46,14 +61,20 @@ func (circuit *eddsaCircuit) Define(api frontend.API) error {
 
 ```go
 type merkleCircuit struct {
-    RootHash     frontend.Variable `gnark:",public"`
-    Path, Helper []frontend.Variable
+	MerkleProof merkle.MerkleProof
+	Leaf        frontend.Variable
 }
 
 func (circuit *merkleCircuit) Define(api frontend.API) error {
-    hFunc, _ := mimc.NewMiMC(api.Curve())
-    merkle.VerifyProof(cs, hFunc, circuit.RootHash, circuit.Path, circuit.Helper)
-    return nil
+	hFunc, err := mimc.NewMiMC(api)
+	if err != nil {
+		return err
+	}
+
+	// Path[0] is the leaf. The proof index is encoded in little-endian bit
+	// order in Path[1:].
+	circuit.MerkleProof.VerifyProof(api, &hFunc, circuit.Leaf)
+	return nil
 }
 ```
 
@@ -64,18 +85,27 @@ Enables verifying a _BLS12_377_ Groth16 `Proof` inside a _BW6_761_ circuit
 
 ```go
 type verifierCircuit struct {
-    InnerProof Proof
-    InnerVk    VerifyingKey
-    Hash       frontend.Variable
+	Proof        recursion_groth16.Proof[sw_bls12377.G1Affine, sw_bls12377.G2Affine]
+	VerifyingKey recursion_groth16.VerifyingKey[sw_bls12377.G1Affine, sw_bls12377.G2Affine, sw_bls12377.GT]
+	InnerWitness recursion_groth16.Witness[sw_bls12377.ScalarField] `gnark:",public"`
 }
 
 func (circuit *verifierCircuit) Define(api frontend.API) error {
+	verifier, err := recursion_groth16.NewVerifier[
+		sw_bls12377.ScalarField,
+		sw_bls12377.G1Affine,
+		sw_bls12377.G2Affine,
+		sw_bls12377.GT,
+	](api)
+	if err != nil {
+		return err
+	}
 
-    groth16.Verify(api, circuit.InnerVk, circuit.InnerProof, []frontend.Variable{circuit.Hash})
-
-    return nil
+	return verifier.AssertProof(circuit.VerifyingKey, circuit.Proof, circuit.InnerWitness)
 }
 ```
+
+For a complete flow, see [`std/recursion/groth16/verifier_test.go`](https://github.com/Consensys-Incorporated/gnark/blob/v0.16.3/std/recursion/groth16/verifier_test.go). It shows how to compile the inner circuit, prove it natively, convert the proof, verifying key, and public witness with `ValueOf*`, and solve the outer circuit.
 
   </TabItem>
 </Tabs>

@@ -14,7 +14,7 @@ To serialize a `gnark` object:
 
 ```go
 // compile a circuit
-cs, err := frontend.Compile(ecc.BN254, r1cs.NewBuilder, &circuit)
+cs, err := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &circuit)
 
 // cs implements io.WriterTo
 var buf bytes.Buffer
@@ -115,29 +115,57 @@ If the witness creation and proof creation live in the same process, refer to [C
 
 :::
 
-```go title="Full witness in Go"
+```go title="Witness binary encoding"
 // witness
 var assignment cubic.Circuit
 assignment.X = 3
 assignment.Y = 35
-witness, _ := frontend.NewWitness(&assignment, ecc.BN254)
+witness, err := frontend.NewWitness(&assignment, ecc.BN254.ScalarField())
+if err != nil {
+	return err
+}
 
-// Binary marshalling
+// Binary encoding
 data, err := witness.MarshalBinary()
-
-// JSON marshalling
-json, err := witness.MarshalJSON()
+if err != nil {
+	return err
+}
 
 ...
-// recreate a witness
-witness, err := witness.New(ecc.BN254, ccs.GetSchema()) // note that schema is optional for binary encoding
-
-// Binary unmarshalling
-err := witness.UnmarshalBinary(data)
-
-// JSON unmarshalling
-err := witness.UnmarshalJSON(json)
+// Recreate an empty witness for the circuit's field and decode it.
+decoded, err := witness.New(ecc.BN254.ScalarField())
+if err != nil {
+	return err
+}
+if err := decoded.UnmarshalBinary(data); err != nil {
+	return err
+}
 
 // extract the public part only
-publicWitness, _ := witness.Public()
+publicWitness, err := decoded.Public()
+if err != nil {
+	return err
+}
+```
+
+JSON encoding and decoding require the circuit schema. Build it directly from the circuit structure:
+
+```go title="Witness JSON encoding"
+schema, err := frontend.NewSchema(ecc.BN254.ScalarField(), &assignment)
+if err != nil {
+	return err
+}
+
+json, err := witness.ToJSON(schema)
+if err != nil {
+	return err
+}
+
+decoded, err := witness.New(ecc.BN254.ScalarField())
+if err != nil {
+	return err
+}
+if err := decoded.FromJSON(schema, json); err != nil {
+	return err
+}
 ```
