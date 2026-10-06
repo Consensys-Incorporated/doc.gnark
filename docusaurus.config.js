@@ -63,29 +63,29 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      algolia: {
-        // The application ID provided by Algolia
-        appId: "NSRFPEJ4NC",
+      // algolia: {
+      //   // The application ID provided by Algolia
+      //   appId: "NSRFPEJ4NC",
 
-        // Public API key: it is safe to commit it
-        apiKey: "cea41b975ad6c9a01408dfda6e0061d3",
+      //   // Public API key: it is safe to commit it
+      //   apiKey: "cea41b975ad6c9a01408dfda6e0061d3",
 
-        indexName: "gnark",
+      //   indexName: "gnark",
 
-        // Optional: see doc section below
-        contextualSearch: true,
+      //   // Optional: see doc section below
+      //   contextualSearch: true,
 
-        // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
-        externalUrlRegex: "external\\.com|domain\\.com",
+      //   // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
+      //   externalUrlRegex: "external\\.com|domain\\.com",
 
-        // Optional: Algolia search parameters
-        searchParameters: {},
+      //   // Optional: Algolia search parameters
+      //   searchParameters: {},
 
-        // Optional: path for search page that enabled by default (`false` to disable it)
-        searchPagePath: "search",
+      //   // Optional: path for search page that enabled by default (`false` to disable it)
+      //   searchPagePath: "search",
 
-        // ... other Algolia params
-      },
+      //   // ... other Algolia params
+      // },
       // announcementBar: {
       //   id: "announcement_bar",
       //   content: "⛔️ This documentation site is still under construction! 🚧",
@@ -240,6 +240,30 @@ const config = {
         anonymizeIP: true,
       },
     ],
+    [
+      "docusaurus-plugin-llms",
+      {
+        docsDir: "docs",
+        generateLLMsTxt: true,
+        generateLLMsFullTxt: true,
+        title: "gnark documentation",
+        description:
+          "Documentation for gnark, a fast and expressive zk-SNARK library written in Go.",
+        excludeImports: true,
+        removeDuplicateHeadings: true,
+        // Link to the published pages. .md URLs are not served yet.
+        addMdExtension: false,
+        logLevel: process.env.CI ? "quiet" : "normal",
+        ignoreFiles: ["Images/**"],
+        includeOrder: [
+          "index.md",
+          "HowTo/**/*",
+          "Concepts/**/*",
+          "Tutorials/**/*",
+          "Reference/**/*",
+        ],
+      },
+    ],
   ],
   stylesheets: [
     {
@@ -250,7 +274,28 @@ const config = {
       crossorigin: "anonymous",
     },
   ],
-  themes: [],
+  themes: [
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      {
+        docsRouteBasePath: "/",
+        hashed: true,
+        indexBlog: false,
+        askAi: {
+          project: "gnark",                 
+          apiUrl: process.env.ASK_AI_API_URL || "http://localhost:5000/api/stream?api_key=....",
+          hotkey: "cmd+k",
+          texts: {
+            welcomeMessage:
+              "Hi! I can answer questions about the documentation, its features or usage instructions. Be sure to check the source documentation links that I provide for full details.\n\n" +
+              "Please do not input any of your own or another's personal information i.e, passwords, private keys, seed phrases, personal data, or other sensitive information. If you need support and do not want to engage with me, please reach out to us on GitHub Discussions. Any information that you provide is not used for training my AI systems. For details on our data handling practices, see our Privacy Policy.\n\n" +
+              "By proceeding you acknowledge the above.",
+            inputPlaceholder: "Please ask a question",
+          }              
+        },        
+      },
+    ],
+  ],
 };
 
 module.exports = async function createConfig() {

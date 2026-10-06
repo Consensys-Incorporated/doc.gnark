@@ -126,3 +126,65 @@ html {
     margin-left: 0.75rem;
   }
 }
+
+/* Search bar customization */
+.navbar__search-input {
+  width: 14rem;
+}
+
+.navbar__search-input::placeholder {
+  color: #5a5a5a;
+}
+
+[data-theme="dark"] .navbar__search-input::placeholder {
+  color: #b0b0b0;
+}
+
+/* Ask AI welcome copy uses explicit line breaks. */
+[class*="welcomeScreen_"] p {
+  white-space: pre-wrap !important;
+  font-size: 0.85rem !important;
+  line-height: 1.5;
+  color: var(--ifm-color-emphasis-700);
+}
+
+/* Floating Ask AI button. Dark mode primary is white, so invert the label. */
+.floating-ask-ai-btn {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  z-index: 100;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 0.65rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background-color: var(--ifm-color-primary);
+  border: none;
+  border-radius: 2rem;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 20%);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.floating-ask-ai-btn:hover {
+  box-shadow: 0 6px 20px rgb(0 0 0 / 28%);
+  transform: translateY(-2px);
+}
+
+.floating-ask-ai-btn:active {
+  transform: translateY(0);
+}
+
+[data-theme="dark"] .floating-ask-ai-btn {
+  color: #121212;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 40%);
+}
+
+[data-theme="dark"] .floating-ask-ai-btn:hover {
+  box-shadow: 0 6px 20px rgb(0 0 0 / 50%);
+}
