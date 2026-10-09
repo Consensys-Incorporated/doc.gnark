@@ -5,7 +5,7 @@ const darkCodeTheme = require("prism-react-renderer").themes.dracula;
 const config = {
   title: "gnark",
   tagline: "Fast, expressive zk-SNARKs in Go",
-  url: "https://docs.gnark.consensys.io",
+  url: "https://docs.gnark.consensys.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
   favicon: "img/gnark-logo-assets/svgs/black-symbol.svg",
