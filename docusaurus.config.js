@@ -197,7 +197,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Consensys Software Inc.`,
+        copyright: `© ${new Date().getFullYear()} Consensys Incorporated`,
       },
       prism: {
         theme: lightCodeTheme,
