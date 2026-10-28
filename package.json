@@ -80,7 +80,7 @@
     ]
   },
   "overrides": {
-    "webpack": "5.111.1"
+    "webpack": "5.112.0"
   },
   "engines": {
     "node": ">=24.0.0"
