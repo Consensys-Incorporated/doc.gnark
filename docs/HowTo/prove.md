@@ -3,6 +3,7 @@ title: Create and verify proofs
 description: How to create and verify proofs
 sidebar_position: 5
 ---
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
