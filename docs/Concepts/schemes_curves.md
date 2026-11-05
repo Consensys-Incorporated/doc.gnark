@@ -31,9 +31,9 @@ Groth16 is a circuit-specific preprocessing general-purpose zk-SNARK constructio
 
 :::info
 
-We recommend this short [explaination of Groth16](http://www.zeroknowledgeblog.com/index.php/groth16).
+We recommend this short [explanation of Groth16](http://www.zeroknowledgeblog.com/index.php/groth16).
 
-Some projects that use Groth16 include ZCash, Loopring, Hermez, Celo, and Filecoin.
+Some projects that use Groth16 include Zcash, Loopring, Hermez, Celo, and Filecoin.
 
 :::
 
@@ -83,7 +83,7 @@ To work with Groth16 and PlonK, the curves must:
 
 :::info
 
-BN254 is used in Ethereum 1.x, BLS12-381 in Ethereum 2.0, ZCash Sapling, Algorand, Dfinity, Chia, and Filecoin, and BLS12-377/BW6-761 in Celo, Aleo and EY.
+BN254 is used in Ethereum 1.x, BLS12-381 in Ethereum 2.0, Zcash Sapling, Algorand, Dfinity, Chia, and Filecoin, and BLS12-377/BW6-761 in Celo, Aleo and EY.
 
 :::
 
