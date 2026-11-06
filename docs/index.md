@@ -21,7 +21,7 @@ In a typical workflow:
 
 1. [Implement an algorithm] for which you want to prove and verify execution.
 1. Use the `gnark/frontend` package to [translate the algorithm into a set of mathematical constraints].
-1. Use the `gnark/backend` package to [create and verify your **proof of knowledge**](howto/prove.md). That is, you prove that you know a list of **secret inputs** satisfying a set of mathematical constraints.
+1. Use the `gnark/backend` package to [create and verify your **proof of knowledge**](how-to/prove.md). That is, you prove that you know a list of **secret inputs** satisfying a set of mathematical constraints.
 
 ![gnark workflow](images/gnark_workflow.png)
 
@@ -187,7 +187,7 @@ Refer to the [Proving schemes and curves](concepts/schemes_curves.md) section.
 <!--links-->
 
 [zk-SNARK]: concepts/zkp.md
-[high-level API]: howto/write/circuit_api.md
+[high-level API]: how-to/write/circuit_api.md
 [circuits]: concepts/circuits.md
-[Implement an algorithm]: howto/write/circuit_api.md
-[translate the algorithm into a set of mathematical constraints]: howto/compile.md
+[Implement an algorithm]: how-to/write/circuit_api.md
+[translate the algorithm into a set of mathematical constraints]: how-to/compile.md

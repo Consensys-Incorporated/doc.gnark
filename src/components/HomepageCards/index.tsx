@@ -14,7 +14,7 @@ const CardList: CardItem[] = [
   {
     eyebrow: "01 / Start",
     title: "Build your first circuit",
-    link: "/howto/get_started",
+    link: "/how-to/get_started",
     description:
       "Install gnark, define a circuit, and generate your first proof in Go.",
   },

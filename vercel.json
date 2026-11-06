@@ -3,17 +3,17 @@
   "redirects": [
     {
       "source": "/HowTo",
-      "destination": "/howto",
+      "destination": "/how-to",
       "permanent": true
     },
     {
       "source": "/HowTo/",
-      "destination": "/howto",
+      "destination": "/how-to",
       "permanent": true
     },
     {
       "source": "/HowTo/:match(.*)",
-      "destination": "/howto/:match(.*)",
+      "destination": "/how-to/:match(.*)",
       "permanent": true
     },
     {

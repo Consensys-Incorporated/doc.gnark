@@ -257,7 +257,7 @@ const config = {
         ignoreFiles: ["images/**"],
         includeOrder: [
           "index.md",
-          "howto/**/*",
+          "how-to/**/*",
           "concepts/**/*",
           "tutorials/**/*",
           "reference/**/*",
