@@ -36,8 +36,8 @@
     "sidebars.js",
     "tsconfig.*.json",
     ".github/**",
-    "docs/Tutorials/eddsa.md",
-    "docs/Concepts/schemes_curves.md"
+    "docs/tutorials/eddsa.md",
+    "docs/concepts/schemes_curves.md"
   ],
   "ignoreRegExpList": ["Email", "Urls", "#[\\w-]*"]
 }

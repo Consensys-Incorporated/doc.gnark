@@ -16,7 +16,7 @@ If we don't consider **Succinctness**, and if we slightly modify the notion of *
 
 The signature schemes are specific mathematical statements, or [**circuits**](circuits.md).
 
-With `gnark`, you can write any circuit using the [gnark API](../HowTo/write/circuit_api.md). An instance of such a circuit is $hash(x)=y$, where $y$ is public and $x$ secret.
+With `gnark`, you can write any circuit using the [gnark API](../howto/write/circuit_api.md). An instance of such a circuit is $hash(x)=y$, where $y$ is public and $x$ secret.
 
 A valid proof of such a statement ensures that the creator of the proof knows $x$ such that $hash(x)=y$, without revealing $x$. It is worth noting that if $y$ is not specified, there are an infinity of couples $(x,y)$ verifying $hash(x)=y$. But if $y$ is specified, only one $x$ verifies this relation.
 

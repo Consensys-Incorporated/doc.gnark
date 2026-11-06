@@ -166,7 +166,7 @@ const config = {
               },
               {
                 label: "Reference",
-                to: "/Reference/api",
+                to: "/reference/api",
               },
             ],
           },
@@ -254,13 +254,13 @@ const config = {
         // Link to the published pages. .md URLs are not served yet.
         addMdExtension: false,
         logLevel: process.env.CI ? "quiet" : "normal",
-        ignoreFiles: ["Images/**"],
+        ignoreFiles: ["images/**"],
         includeOrder: [
           "index.md",
-          "HowTo/**/*",
-          "Concepts/**/*",
-          "Tutorials/**/*",
-          "Reference/**/*",
+          "howto/**/*",
+          "concepts/**/*",
+          "tutorials/**/*",
+          "reference/**/*",
         ],
       },
     ],

@@ -1,3 +1,80 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/HowTo",
+      "destination": "/howto",
+      "permanent": true
+    },
+    {
+      "source": "/HowTo/",
+      "destination": "/howto",
+      "permanent": true
+    },
+    {
+      "source": "/HowTo/:match(.*)",
+      "destination": "/howto/:match(.*)",
+      "permanent": true
+    },
+    {
+      "source": "/Concepts",
+      "destination": "/concepts",
+      "permanent": true
+    },
+    {
+      "source": "/Concepts/",
+      "destination": "/concepts",
+      "permanent": true
+    },
+    {
+      "source": "/Concepts/:match(.*)",
+      "destination": "/concepts/:match(.*)",
+      "permanent": true
+    },
+    {
+      "source": "/Tutorials",
+      "destination": "/tutorials",
+      "permanent": true
+    },
+    {
+      "source": "/Tutorials/",
+      "destination": "/tutorials",
+      "permanent": true
+    },
+    {
+      "source": "/Tutorials/:match(.*)",
+      "destination": "/tutorials/:match(.*)",
+      "permanent": true
+    },
+    {
+      "source": "/Reference",
+      "destination": "/reference",
+      "permanent": true
+    },
+    {
+      "source": "/Reference/",
+      "destination": "/reference",
+      "permanent": true
+    },
+    {
+      "source": "/Reference/:match(.*)",
+      "destination": "/reference/:match(.*)",
+      "permanent": true
+    },
+    {
+      "source": "/Images",
+      "destination": "/images",
+      "permanent": true
+    },
+    {
+      "source": "/Images/",
+      "destination": "/images",
+      "permanent": true
+    },
+    {
+      "source": "/Images/:match(.*)",
+      "destination": "/images/:match(.*)",
+      "permanent": true
+    }
+  ]
 }
