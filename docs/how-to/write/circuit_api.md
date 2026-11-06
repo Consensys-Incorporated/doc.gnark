@@ -45,7 +45,7 @@ Other zk-SNARK libraries introduced the term _gadget_ to describe circuit compos
 
 Refer to the [Go package documentation] for a complete list of the API with examples.
 
-Refer to the [EdDSA tutorial](../../Tutorials/eddsa.md) for an example.
+Refer to the [EdDSA tutorial](../../tutorials/eddsa.md) for an example.
 
 <!--links-->
 

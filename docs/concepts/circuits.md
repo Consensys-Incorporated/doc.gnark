@@ -10,7 +10,7 @@ From a user perspective, a circuit is like a program, which can be written in a 
 
 For [Groth16](schemes_curves.md#groth16), a constraint looks like $(\sum_ia_ix_i)(\sum_ib_iy_i)=\sum_ic_iz_i$ where $a,b,c$ are constants and $x,y,z$ are variables which depend on the secret inputs known by a prover.
 
-Translating a circuit, written with [gnark API](../HowTo/write/circuit_api.md) to such a constraint system is called the "arithmetization" of a circuit.
+Translating a circuit, written with [gnark API](../how-to/write/circuit_api.md) to such a constraint system is called the "arithmetization" of a circuit.
 
 An important point is that every component of a constraint (variables, inputs and constants) live in $\mathbb{F}_p$, a finite field of characteristic $p$. To write a circuit which contains a reasonable number of constraints, it is important to work on the field $\mathbb{F}_p$, so that the field in which the circuits variables live is the same as the field on which the constraint system reasons.
 
