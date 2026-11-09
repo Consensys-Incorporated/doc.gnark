@@ -145,7 +145,7 @@ var mimcCircuit Circuit
 
 :::info
 
-- `gnark` won the [ZPrize competition to accelerate MSM on Mobile](https://mirror.xyz/ocelotlabs.eth/QytYZQIaiA73abHeUj8NS0Mm5_f0fMptrZM70DvmeMc) 🎉
+- `gnark` won the [ZPrize competition to accelerate MSM on Mobile](https://www.zprize.io/blog/zprize-i-spotlight-open-division-prize-7-msm-on-mobile) 🎉
 - [zka.lc](https://zka.lc/charts) shows gnark performs better than `arkworks` or `supranational/blst` for most operations
 
 :::
