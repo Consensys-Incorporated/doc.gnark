@@ -15,7 +15,7 @@ type Circuit interface {
 }
 ```
 
-The circuit must declare its [public and secret inputs](../../Concepts/zkp.md#public-and-secret-inputs) as `frontend.Variable`:
+The circuit must declare its [public and secret inputs](../../concepts/zkp.md#public-and-secret-inputs) as `frontend.Variable`:
 
 ```go
 type MyCircuit struct {

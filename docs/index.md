@@ -21,9 +21,9 @@ In a typical workflow:
 
 1. [Implement an algorithm] for which you want to prove and verify execution.
 1. Use the `gnark/frontend` package to [translate the algorithm into a set of mathematical constraints].
-1. Use the `gnark/backend` package to [create and verify your **proof of knowledge**](HowTo/prove.md). That is, you prove that you know a list of **secret inputs** satisfying a set of mathematical constraints.
+1. Use the `gnark/backend` package to [create and verify your **proof of knowledge**](how-to/prove.md). That is, you prove that you know a list of **secret inputs** satisfying a set of mathematical constraints.
 
-![gnark workflow](Images/gnark_workflow.png)
+![gnark workflow](images/gnark_workflow.png)
 
 :::warning
 
@@ -162,17 +162,17 @@ Here we benchmark two circuits (65k and 8M constraints) using `gnark`, `arkworks
 
 #### Groth16 Prover (BN254, 65k constraints)
 
-![groth16 prove 65k](Images/prove-65k.png)
+![groth16 prove 65k](images/prove-65k.png)
 
 #### Groth16 Prover (BN254, 8 million constraints)
 
-![groth16 prove 8M](Images/prove-8M.png)
+![groth16 prove 8M](images/prove-8M.png)
 
 On large circuits, that's **over 2 million constraints per second**.
 
 #### Groth16 Verifier (BN254)
 
-![groth16 verifier](Images/verify-65k.png)
+![groth16 verifier](images/verify-65k.png)
 
 :::note
 
@@ -182,12 +182,12 @@ These benchmarks were executed on an AWS `hpc6a` instance in November 2022.
 
 ## Proving schemes and curves
 
-Refer to the [Proving schemes and curves](Concepts/schemes_curves.md) section.
+Refer to the [Proving schemes and curves](concepts/schemes_curves.md) section.
 
 <!--links-->
 
-[zk-SNARK]: Concepts/zkp.md
-[high-level API]: HowTo/write/circuit_api.md
-[circuits]: Concepts/circuits.md
-[Implement an algorithm]: HowTo/write/circuit_api.md
-[translate the algorithm into a set of mathematical constraints]: HowTo/compile.md
+[zk-SNARK]: concepts/zkp.md
+[high-level API]: how-to/write/circuit_api.md
+[circuits]: concepts/circuits.md
+[Implement an algorithm]: how-to/write/circuit_api.md
+[translate the algorithm into a set of mathematical constraints]: how-to/compile.md

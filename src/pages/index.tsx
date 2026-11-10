@@ -25,7 +25,7 @@ function HomepageHeader() {
           <div className={styles.actions}>
             <Link
               className="button button--primary button--lg"
-              to="/HowTo/get_started">
+              to="/how-to/get_started">
               Get started
             </Link>
             <Link className={styles.textLink} to="https://play.gnark.io">
