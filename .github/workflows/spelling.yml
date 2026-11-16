@@ -6,6 +6,8 @@ on:
     branches:
       - main
 
+permissions: {} # lock everything by default (least-privilege)
+
 jobs:
   vale:
     name: Spelling
@@ -21,3 +23,7 @@ jobs:
 
       - name: Vale
         uses: Consensys-Incorporated/github-actions/docs-spelling-check@633ca293fa3bc3490d58840b085245780774c989 # 2.0.0
+        with:
+          FILEPATHS: |
+            docs/**/*.md
+            docs/**/*.mdx
