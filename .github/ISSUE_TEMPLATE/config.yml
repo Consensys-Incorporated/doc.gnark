@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: gnark discussions
+    url: https://github.com/Consensys-Incorporated/gnark/discussions
+    about: Ask usage questions or discuss ideas that are not ready for a docs issue.
